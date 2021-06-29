@@ -56,13 +56,31 @@ def save():
                 json.dump(new_data,data_file,indent=4)
         else:
                  #updating old data
-                data.update(new_data)
+            data.update(new_data)
             with open(data,data_file,indent=4):
                  #saving updated data
-                data.dump(data,data_file,indent=4
+                data.dump(data,data_file,indent=4)
         finally:
                 website_entry.delete(0,END)
                 password_entry.delete(0,END)
+#------------------------------Search ---------------------------------#
+
+def search_website():
+    website= website_entry.get()
+    try:
+        with open("data.json") as data_file:
+            data= json.load(data_file)
+    except FileNotFoundError:
+        messagebox.showinfo(title="Error", message="No Data File Found.")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password=data[website]["password"]
+            messagebox.showinfo(title=website , message=f" Email: {email}\n Password: {password}")
+        else:
+            messagebox.showinfo(title="Error", message=f"No details for {website} exist.")
+
+
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -85,13 +103,13 @@ password_label.grid(row=3,column=0)
 
 #Input box(entries)
 
-website_entry = Entry(width=35)
-website_entry.grid(row=1,column=1, columnspan=2)
+website_entry = Entry(width=25)
+website_entry.grid(row=1,column=1)
 website_entry.focus()
 email_entry = Entry(width=35)
 email_entry.grid(row=2,column=1,columnspan=2)
 email_entry.insert(0,"abc@gmail.com")
-password_entry = Entry(width=21)
+password_entry = Entry(width=25)
 password_entry.grid(row=3,column=1)
 
 #buttons
@@ -100,5 +118,7 @@ generat_password_button= Button(text="Generate Password",command=generate_passwo
 generat_password_button.grid(row=3,column=2)
 add_button =Button(text="Add", width=36,command=save)
 add_button.grid(row=4,column=1,columnspan=2)
+search_button= Button(text="Search",command=search_website)
+search_button.grid(row=1,column=2)
 
 window.mainloop()
